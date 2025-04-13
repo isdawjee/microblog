@@ -1,9 +1,14 @@
 from flask import Flask
-from config import Config
+from flask_migrate import Migrate
+from flask_sqlalchemy import SQLAlchemy
 
+from config import Config
 
 app = Flask(__name__)
 app.config.from_object(Config)
 
-# Must be here, otherwise circular import issue
-from app import routes
+db = SQLAlchemy(app)
+migrate = Migrate(app, db)
+
+# Keep at bottom, avoid circular import
+from app import routes, models
